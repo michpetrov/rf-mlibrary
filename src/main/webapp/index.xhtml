@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/WEB-INF/templates/default.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:my="http://java.sun.com/jsf/composite/components"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="title">Movie library</ui:define>
+	<ui:define name="content">
+
+		<h:form>
+			<h:panelGrid columns="3">
+				<a4j:outputPanel ajaxRendered="true" id="movieList">
+					<rich:panel header="Movies" style="width: 200px">
+						<rich:list value="#{libraryBean.movies}" var="movie"
+							style="list-style-type: none">
+							<a4j:commandLink value="#{movie.name}" render="moviePanel"
+								execute="@this">
+								<f:setPropertyActionListener target="#{movieBean.movie}"
+									value="#{movie}" />
+							</a4j:commandLink>
+						</rich:list>
+					</rich:panel>
+				</a4j:outputPanel>
+
+
+				<!-- rendered=#{not empty ...} does not seem to work -->
+				<rich:panel style="background: none; border: none">
+					<a4j:outputPanel ajaxRendered="true" id="moviePanel">
+						<rich:panel style="width: 250px; height: 100%;"
+							header="#{movieBean.movie.name}" id="infoPanel"
+							rendered="#{not empty movieBean.movie}">
+							<h:outputText value="Year: " style="font-weight:bold" />
+							<h:outputText value="#{movieBean.movie.year}" />
+							<br />
+							<h:outputText value="Genre: " style="font-weight:bold" />
+							<h:outputText value=" #{movieBean.movie.genre}" />
+							<br />
+							<h:outputText value="Director:" style="font-weight:bold" />
+							<h:outputText value=" #{movieBean.movie.director}" />
+							<br />
+							<h:outputText value="Rating:" style="font-weight:bold" />
+							<h:outputText value="#{movieBean.movie.rating}" id="rating"
+								rendered="#{movieBean.movie.rating != 0}">
+								<f:convertNumber pattern="  0.00'/5'" />
+							</h:outputText>
+							<h:outputText value=" Not yet rated"
+								rendered="#{movieBean.movie.rating == 0}" />
+							<br />
+							<hr />
+							<h:outputText value="#{movieBean.movie.description}" />
+							<br />
+							<a4j:commandButton value="Edit this movie" render="form"
+								execute="@this">
+								<f:setPropertyActionListener target="#{libraryBean.newMovie}"
+									value="#{movieBean.movie}" />
+								<f:setPropertyActionListener target="#{libraryBean.op}"
+									value="2" />
+							</a4j:commandButton>
+
+							<a4j:commandButton value="Delete this movie"
+								render="moviePanel movieList" execute="@this"
+								action="#{libraryBean.deleteMovie}">
+								<f:setPropertyActionListener
+									target="#{libraryBean.selectedMovieId}"
+									value="#{movieBean.movie.id}" />
+								<f:setPropertyActionListener target="#{movieBean.movie}"
+									value="null" />
+							</a4j:commandButton>
+
+							<a4j:outputPanel ajaxRendered="true" id="reviews" layout="block">
+								<rich:dataTable value="#{movieBean.movie.reviews}" var="review"
+									id="reviewList" style="width: 100%">
+									<f:facet name="header">
+										<h:outputText value="Reviews" />
+									</f:facet>
+									<rich:column>
+										<h:outputText value="#{review}" />
+									</rich:column>
+								</rich:dataTable>
+							</a4j:outputPanel>
+						</rich:panel>
+
+						<rich:panel rendered="#{not empty movieBean.movie}">
+							<a4j:region id="ratingRegion">
+								<a4j:outputPanel ajaxRendered="true" id="outputPanel">
+
+									<h:selectOneRadio value="#{movieBean.movie.newRating}"
+										id="ratingForm">
+										<f:selectItem itemValue="1" itemLabel="1" />
+										<f:selectItem itemValue="2" itemLabel="2" />
+										<f:selectItem itemValue="3" itemLabel="3" />
+										<f:selectItem itemValue="4" itemLabel="4" />
+										<f:selectItem itemValue="5" itemLabel="5" />
+									</h:selectOneRadio>
+									<a4j:commandButton value="Rate"
+										action="#{movieBean.movie.rate}"
+										render="infoPanel outputPanel" limitRender="true" />
+
+								</a4j:outputPanel>
+							</a4j:region>
+						</rich:panel>
+
+						<a4j:outputPanel>
+							<rich:panel header="Write New Review" id="reviewPanel"
+								rendered="#{not empty movieBean.movie}">
+								<h:inputTextarea id="reviewText"
+									value="#{movieBean.movie.newReview}" />
+								<br />
+								<a4j:commandButton action="#{movieBean.movie.addReview}"
+									render="reviews" />
+							</rich:panel>
+						</a4j:outputPanel>
+					</a4j:outputPanel>
+				</rich:panel>
+
+				<a4j:region>
+					<a4j:outputPanel ajaxRendered="true" id="form">
+						<rich:panel style="width: 260px; margin-left: 120px">
+							<f:facet name="header">
+								<h:outputText value="Add new movie"
+									rendered="#{libraryBean.op == 1}" />
+								<h:outputText value="Edit movie"
+									rendered="#{libraryBean.op != 1}" />
+							</f:facet>
+							<h:panelGrid columns="2">
+								<h:outputLabel value="Name" for="name" />
+								<h:inputText id="name" value="#{libraryBean.newMovie.name}" />
+								<h:outputLabel value="Year" for="year" />
+								<h:inputText id="year" value="#{libraryBean.newMovie.year}" />
+								<h:outputLabel value="Director" for="director" />
+								<h:inputText id="director"
+									value="#{libraryBean.newMovie.director}" />
+								<h:outputLabel value="Genre" for="genre" />
+								<h:inputText id="genre" value="#{libraryBean.newMovie.genre}" />
+								<h:outputLabel value="Description" for="descr" />
+								<h:inputTextarea rows="5" id="descr"
+									value="#{libraryBean.newMovie.description}" />
+								<h:inputHidden value="#{libraryBean.newMovie.id}" />
+								<div>
+									<a4j:commandButton action="#{libraryBean.addNewMovie}"
+										render="movieList form" execute="@region" value="Save" />
+									<a4j:commandButton action="#{libraryBean.reset}" render="form"
+										value="Cancel" execute="@this" />
+								</div>
+							</h:panelGrid>
+						</rich:panel>
+					</a4j:outputPanel>
+				</a4j:region>
+			</h:panelGrid>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
