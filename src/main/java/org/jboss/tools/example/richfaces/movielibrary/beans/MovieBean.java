@@ -76,7 +76,7 @@ public class MovieBean implements Serializable {
 	public void addReport() {
 		//newReport.setMovieId(movie.getId());
 		movie.addReport(newReport);
-		updateMovie();
+		mo.updateMovie(movie);
 		
 		newReport = new Report();
 	}
