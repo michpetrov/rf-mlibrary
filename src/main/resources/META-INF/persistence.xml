@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.0"
-   xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
         http://java.sun.com/xml/ns/persistence
         http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-   <persistence-unit name="movies-primary" transaction-type="JTA">
-      <!-- If you are running in a production environment, add a managed 
-         data source, this example data source is just for development and testing! -->
-         <jta-data-source>java:/MySQL</jta-data-source>
-      <properties>
+    <persistence-unit name="movies-primary">
+        <!-- <jta-data-source>java:/MySQL</jta-data-source> -->
+        <jta-data-source>java:jboss/datasources/MLibraryDS</jta-data-source>
+        <properties>
+        <!-- H2 properties -->
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+            <property name="hibernate.show_sql" value="false" />
          <!-- Properties for Hibernate -->
-         <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
-         <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/mlibrary"/>
-         <property name="hibernate.connection.username" value="test"/>
-         <property name="hibernate.connection.password" value="password"/>
-         <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-         <property name="hibernate.show_sql" value="true" />
-         <property name="hibernate.format_sql" value="true" />
-         <property name="hibernate.archive.autodetection" value="class"/>
-         <!-- <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/> --> 
-      </properties>
-      <!-- <provider>org.hibernate.ejb.HibernatePersistence</provider> -->
-        <!-- <jta-data-source>jdbc:/MySQL</jta-data-source> -->
-        <!-- <non-jta-data-source>jdbc:/MySQL</non-jta-data-source> -->
-   </persistence-unit>
+         <!-- MYSQL properties -->
+            <!-- 
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/mlibrary"/>
+            <property name="hibernate.connection.username" value="test"/>
+            <property name="hibernate.connection.password" value="password"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.archive.autodetection" value="class"/> 
+            -->
+        </properties>
+    </persistence-unit>
 </persistence>
