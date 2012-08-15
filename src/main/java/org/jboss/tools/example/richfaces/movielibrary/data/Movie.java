@@ -17,125 +17,125 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="movies")
+@Table(name = "movies")
 public class Movie {
-	
-	@Id
-	// even though we use AUTO_INCREMENT in the db, GenerationType.AUTO will not work
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
-	
-	@NotNull
-	@Size(min = 5, max = 40)
-	private String name;
-	
-	@NotNull
-	@Digits(integer = 4, fraction = 0)
-	@Min(value = 1900)
-	private int year;
-	
-	@NotNull
-	@Size(min = 4, max = 40)
-	private String director;
-	
-	@NotNull
-	private String genre;
 
-	@Size(max = 200)
-	private String description;
-	
-	@ElementCollection(fetch=FetchType.EAGER, targetClass=Report.class)
-	@CollectionTable(name="reports", joinColumns=@JoinColumn(name="movie_id"))
-	private List<Report> reports;
+    @Id
+    // even though we use AUTO_INCREMENT in the db, GenerationType.AUTO will not work
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	public Movie() {
-	}
+    @NotNull
+    @Size(min = 5, max = 40)
+    private String name;
 
-	public Movie(int id, String name, int year, String director, String genre, String description) {
-		this.id = id;
-		this.name = name;
-		this.year = year;
-		this.director = director;
-		this.genre = genre;
-		this.description = description;		
-	}
-	
-	public int getYear() {
-		return year;
-	}
+    @NotNull
+    @Digits(integer = 4, fraction = 0)
+    @Min(value = 1900)
+    private int year;
 
-	public void setYear(int year) {
-		this.year = year;
-	}
+    @NotNull
+    @Size(min = 4, max = 40)
+    private String director;
 
-	public String getDirector() {
-		return director;
-	}
+    @NotNull
+    private String genre;
 
-	public void setDirector(String director) {
-		this.director = director;
-	}
+    @Size(max = 200)
+    private String description;
 
-	public String getGenre() {
-		return genre;
-	}
+    @ElementCollection(fetch = FetchType.EAGER, targetClass = Report.class)
+    @CollectionTable(name = "reports", joinColumns = @JoinColumn(name = "movie_id"))
+    private List<Report> reports;
 
-	public void setGenre(String genre) {
-		this.genre = genre;
-	}
+    public Movie() {
+    }
 
-	public int getId() {
-		return id;
-	}
+    public Movie(int id, String name, int year, String director, String genre, String description) {
+        this.id = id;
+        this.name = name;
+        this.year = year;
+        this.director = director;
+        this.genre = genre;
+        this.description = description;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getYear() {
+        return year;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setYear(int year) {
+        this.year = year;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getDirector() {
+        return director;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setDirector(String director) {
+        this.director = director;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getGenre() {
+        return genre;
+    }
 
-	public List<Report> getReports() {
-		return reports;
-	}
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 
-	public void setReports(List<Report> reports) {
-		this.reports = reports;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public double getRating() {
-		//getReports(); // hack to load the reports?
-		if (reports == null) {
-			return 0;
-		}
-		
-		if (reports.isEmpty()) {
-			return 0;
-		}
-		
-		double total = 0;
-		
-		for(Report r : reports) {
-			total+= r.getRating();
-		}
-		
-		return (double) (total / reports.size());
-	}
-	
-	public void addReport(Report r) {
-		reports.add(r);
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(List<Report> reports) {
+        this.reports = reports;
+    }
+
+    public double getRating() {
+        // getReports(); // hack to load the reports?
+        if (reports == null) {
+            return 0;
+        }
+
+        if (reports.isEmpty()) {
+            return 0;
+        }
+
+        double total = 0;
+
+        for (Report r : reports) {
+            total += r.getRating();
+        }
+
+        return (double) (total / reports.size());
+    }
+
+    public void addReport(Report r) {
+        reports.add(r);
+    }
 }
